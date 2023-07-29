@@ -1,0 +1,678 @@
+
+sprite.png
+size: 114, 100
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+creature/toad/attack/east/
+  rotate: false
+  xy: 16, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/attack/east/
+  rotate: false
+  xy: 16, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/attack/east/
+  rotate: false
+  xy: 16, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/idle/east/
+  rotate: false
+  xy: 16, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/idle/east/
+  rotate: false
+  xy: 16, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/walk/east/
+  rotate: false
+  xy: 16, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/attack/east/
+  rotate: false
+  xy: 30, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/attack/east/
+  rotate: false
+  xy: 86, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/attack/north/
+  rotate: false
+  xy: 2, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/attack/north/
+  rotate: false
+  xy: 2, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/attack/north/
+  rotate: false
+  xy: 2, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/idle/north/
+  rotate: false
+  xy: 2, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/idle/north/
+  rotate: false
+  xy: 2, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/walk/north/
+  rotate: false
+  xy: 2, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/attack/north/
+  rotate: false
+  xy: 72, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/attack/north/
+  rotate: false
+  xy: 72, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/attack/south/
+  rotate: false
+  xy: 2, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/attack/south/
+  rotate: false
+  xy: 16, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/south/
+  rotate: false
+  xy: 16, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/south/
+  rotate: false
+  xy: 16, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/attack/south/
+  rotate: false
+  xy: 58, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/attack/west/
+  rotate: false
+  xy: 30, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/attack/west/
+  rotate: false
+  xy: 30, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/attack/west/
+  rotate: false
+  xy: 30, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/idle/west/
+  rotate: false
+  xy: 30, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/idle/west/
+  rotate: false
+  xy: 30, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/walk/west/
+  rotate: false
+  xy: 30, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/attack/west/
+  rotate: false
+  xy: 30, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/attack/west/
+  rotate: false
+  xy: 100, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/east/
+  rotate: false
+  xy: 44, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/east/
+  rotate: false
+  xy: 58, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/attack/east/
+  rotate: false
+  xy: 58, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/idle/east/
+  rotate: false
+  xy: 58, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/idle/north/
+  rotate: false
+  xy: 58, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/attack/north/
+  rotate: false
+  xy: 58, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/idle/north/
+  rotate: false
+  xy: 58, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/idle/north/
+  rotate: false
+  xy: 86, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/south/
+  rotate: false
+  xy: 16, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/attack/south/
+  rotate: false
+  xy: 16, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/attack/south/
+  rotate: false
+  xy: 16, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/attack/south/
+  rotate: false
+  xy: 16, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/idle/south/
+  rotate: false
+  xy: 16, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/walk/south/
+  rotate: false
+  xy: 16, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/idle/south/
+  rotate: false
+  xy: 2, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/idle/west/
+  rotate: false
+  xy: 30, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/idle/west/
+  rotate: false
+  xy: 86, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/walk/west/
+  rotate: false
+  xy: 86, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/west/
+  rotate: false
+  xy: 86, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/attack/west/
+  rotate: false
+  xy: 86, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/idle/west/
+  rotate: false
+  xy: 86, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/jump/east/
+  rotate: false
+  xy: 2, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/jump/east/
+  rotate: false
+  xy: 2, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/jump/east/
+  rotate: false
+  xy: 44, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/jump/east/
+  rotate: false
+  xy: 44, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/jump/east/
+  rotate: false
+  xy: 30, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/jump/east/
+  rotate: false
+  xy: 30, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/jump/north/
+  rotate: false
+  xy: 16, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/jump/north/
+  rotate: false
+  xy: 16, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/jump/north/
+  rotate: false
+  xy: 72, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/jump/north/
+  rotate: false
+  xy: 72, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/jump/north/
+  rotate: false
+  xy: 44, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/jump/north/
+  rotate: false
+  xy: 72, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/jump/south/
+  rotate: false
+  xy: 2, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/jump/south/
+  rotate: false
+  xy: 2, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/jump/south/
+  rotate: false
+  xy: 16, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/jump/south/
+  rotate: false
+  xy: 100, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/jump/south/
+  rotate: false
+  xy: 86, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/jump/south/
+  rotate: false
+  xy: 86, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/jump/west/
+  rotate: false
+  xy: 44, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/jump/west/
+  rotate: false
+  xy: 44, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/jump/west/
+  rotate: false
+  xy: 72, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/jump/west/
+  rotate: false
+  xy: 100, 72
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/jump/west/
+  rotate: false
+  xy: 100, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/jump/west/
+  rotate: false
+  xy: 100, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/walk/east/
+  rotate: false
+  xy: 16, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/walk/east/
+  rotate: false
+  xy: 58, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/walk/east/
+  rotate: false
+  xy: 30, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/idle/east/
+  rotate: false
+  xy: 30, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/walk/east/
+  rotate: false
+  xy: 44, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/walk/east/
+  rotate: false
+  xy: 86, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/walk/north/
+  rotate: false
+  xy: 30, 86
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/walk/north/
+  rotate: false
+  xy: 2, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 1
+creature/toad/walk/north/
+  rotate: false
+  xy: 44, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/idle/north/
+  rotate: false
+  xy: 44, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/walk/north/
+  rotate: false
+  xy: 72, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/walk/north/
+  rotate: false
+  xy: 100, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/walk/south/
+  rotate: false
+  xy: 2, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 4
+creature/toad/idle/south/
+  rotate: false
+  xy: 2, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/walk/south/
+  rotate: false
+  xy: 58, 58
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/walk/south/
+  rotate: false
+  xy: 58, 44
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
+creature/toad/walk/south/
+  rotate: false
+  xy: 58, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/walk/south/
+  rotate: false
+  xy: 86, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/walk/west/
+  rotate: false
+  xy: 16, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 5
+creature/toad/walk/west/
+  rotate: false
+  xy: 16, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 2
+creature/toad/walk/west/
+  rotate: false
+  xy: 72, 2
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 6
+creature/toad/walk/west/
+  rotate: false
+  xy: 100, 16
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: 3
