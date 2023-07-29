@@ -28,9 +28,9 @@ class World: Disposable {
     private val groupStrategy: CameraGroupStrategy
     private val decalBatch: DecalBatch
     private val modelBatch: ModelBatch
-    //private val atlas: TextureAtlas
+    private val atlas: TextureAtlas
 
-    //private val entityFactory: EntityFactory
+    private val entityFactory: EntityFactory
     val engine: Engine
 
     init {
@@ -48,16 +48,16 @@ class World: Disposable {
         groupStrategy = CameraGroupStrategy(camera)
         decalBatch = DecalBatch(groupStrategy)
         modelBatch = ModelBatch()
-        //atlas = TextureAtlas(Gdx.files.internal("spritesheets/toad.atlas"))
-
+        atlas = TextureAtlas(Gdx.files.internal("sprite/sprite.atlas"))
+        println(atlas.regions)
         engine = Engine()
         engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
 
-        //entityFactory = EntityFactory(atlas)
+        entityFactory = EntityFactory(atlas)
 
-        /*test*/
-        engine.addEntity(EntityFactory.cube())
-        //engine.addEntity(entityFactory.toad())
+        /*http://TEST*/
+        //engine.addEntity(EntityFactory.cube())
+        engine.addEntity(entityFactory.toad())
 
         viewport.update(Gdx.graphics.width, Gdx.graphics.height)
     }
@@ -74,6 +74,6 @@ class World: Disposable {
         modelBatch.dispose()
         decalBatch.dispose()
         groupStrategy.dispose()
-        //atlas.dispose()
+        atlas.dispose()
     }
 }

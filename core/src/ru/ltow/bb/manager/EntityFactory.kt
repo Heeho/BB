@@ -24,19 +24,22 @@ class EntityFactory(
 
     companion object {
         fun cube(): Entity {
-            val entity = Entity()
-            val material = Material(ColorAttribute.createDiffuse(Color.BLUE), BlendingAttribute())
-            val attributes = VertexAttributes.Usage.Position.toLong() or VertexAttributes.Usage.Normal.toLong()
-            entity.add(Model(ModelBuilder().createBox(1f, 1f, 1f, material, attributes)))
-            return entity
+            return Entity().apply {
+                add(Model(ModelBuilder().createBox(
+                    1f, 1f, 1f,
+                    Material(ColorAttribute.createDiffuse(Color.BLUE), BlendingAttribute()),
+                    VertexAttributes.Usage.Position.toLong() or VertexAttributes.Usage.Normal.toLong()
+                )))
+            }
         }
     }
 
-    fun toad(): Entity = Entity().apply { add(Billboard(frame = atlas.findRegion("toad/stand/south[0]"))) }
+    fun toad(): Entity = Entity().apply { add(Billboard(frame = atlas.findRegion("creature/toad/idle/south/",1))) }
 
     fun creature(j: Json): Entity {
         val entity = Entity()
-        //TODO Добавляем компоненты и инициализируем их. Для спрайтов и анимаций используем существующие наборы или создаем новые, используя атлас и данные из JSON
+        //TODO Добавляем компоненты по JSON. j.components?.forEach { entity.add(it(...)) }
+        //TODO Для спрайтов и анимаций используем существующие наборы или создаем новые, используя атлас. animationPacks/spritePacks.add(...)
         return entity
     }
 }

@@ -1,10 +1,6 @@
 package ru.ltow.bb.system
 
-import com.badlogic.ashley.core.ComponentMapper
-import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.core.EntitySystem
-import com.badlogic.ashley.core.Family
+import com.badlogic.ashley.core.*
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
@@ -25,13 +21,15 @@ class Renderer(
     private val background: Color,
     private val environment: Environment
 ): EntitySystem() {
-    private lateinit var entities: ImmutableArray<Entity>
+    private lateinit var models: ImmutableArray<Entity>
+    private lateinit var sprites: ImmutableArray<Entity>
     private lateinit var spriteMapper: ComponentMapper<Billboard>
     private lateinit var modelMapper: ComponentMapper<Model>
 
     override fun addedToEngine(engine: Engine?) {
         if(engine != null) {
-            entities = engine.getEntitiesFor(Family.one(Model::class.java,Billboard::class.java).get())
+            models = engine.getEntitiesFor(Family.one(Model::class.java).get())
+            sprites = engine.getEntitiesFor(Family.one(Billboard::class.java).get())
             spriteMapper = ComponentMapper.getFor(Billboard::class.java)
             modelMapper = ComponentMapper.getFor(Model::class.java)
         }
@@ -46,12 +44,8 @@ class Renderer(
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
         modelBatch.begin(camera)
-        entities.forEach {
-            if(spriteMapper.has(it))
-                modelBatch.render(modelMapper.get(it).modelInstance, environment)
-            if(it.getComponent(Billboard::class.java) != null)
-                decalBatch.add(it.getComponent(Billboard::class.java).decal.apply { lookAt(camera.position,camera.up) })
-        }
+        models.forEach { modelBatch.render(modelMapper.get(it).modelInstance, environment) }
+        sprites.forEach { decalBatch.add(spriteMapper.get(it).decal.apply { lookAt(camera.position,camera.up) }) }
         modelBatch.end()
         decalBatch.flush()
 
