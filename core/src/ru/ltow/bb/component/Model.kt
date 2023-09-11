@@ -11,9 +11,5 @@ class Model (
     y: Float = 0f,
     z: Float = 0f
 ): Component {
-    val modelInstance: ModelInstance
-
-    init {
-        modelInstance = ModelInstance(model, Matrix4().setToTranslation(x,y,z))
-    }
+    val modelInstance = ModelInstance(model, Matrix4().setToTranslation(x,y,z))
 }
