@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.ltow.bb.Camera
+import ru.ltow.bb.component.Animated
 import ru.ltow.bb.component.Model
 import ru.ltow.bb.component.Billboard
 
@@ -21,16 +22,18 @@ class Renderer(
     private val background: Color,
     private val environment: Environment
 ): EntitySystem() {
-    private lateinit var models: ImmutableArray<Entity>
-    private lateinit var billboards: ImmutableArray<Entity>
+    private lateinit var modelEntities: ImmutableArray<Entity>
+    private lateinit var billboardEntities: ImmutableArray<Entity>
     private lateinit var billboardMapper: ComponentMapper<Billboard>
+    private lateinit var animatedMapper: ComponentMapper<Animated>
     private lateinit var modelMapper: ComponentMapper<Model>
 
     override fun addedToEngine(engine: Engine?) {
         if(engine != null) {
-            models = engine.getEntitiesFor(Family.one(Model::class.java).get())
-            billboards = engine.getEntitiesFor(Family.one(Billboard::class.java).get())
+            modelEntities = engine.getEntitiesFor(Family.one(Model::class.java).get())
+            billboardEntities = engine.getEntitiesFor(Family.one(Billboard::class.java).get())
             billboardMapper = ComponentMapper.getFor(Billboard::class.java)
+            animatedMapper = ComponentMapper.getFor(Animated::class.java)
             modelMapper = ComponentMapper.getFor(Model::class.java)
         }
         super.addedToEngine(engine)
@@ -44,12 +47,22 @@ class Renderer(
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
 
         modelBatch.begin(camera)
-        models.forEach {
-            modelBatch.render(modelMapper.get(it).modelInstance, environment)
+
+        modelEntities.forEach {
+            modelBatch.render(
+                modelMapper.get(it).modelInstance,
+                environment
+            )
         }
-        billboards.forEach {
-            decalBatch.add(billboardMapper.get(it).getBillboard(camera))
+
+        billboardEntities.forEach {
+            decalBatch.add(
+                billboardMapper.get(it).getBillboard(camera).apply {
+                    this.textureRegion = animatedMapper.get(it).getKeyFrame(deltaTime)
+                }
+            )
         }
+
         modelBatch.end()
         decalBatch.flush()
 

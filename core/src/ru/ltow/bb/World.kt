@@ -2,7 +2,7 @@ package ru.ltow.bb
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.signals.Listener
+import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -14,8 +14,11 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
+import ru.ltow.bb.listener.AddToSetOnReceive
 import ru.ltow.bb.system.Animator
+import ru.ltow.bb.system.Controller
 import ru.ltow.bb.system.Renderer
+import ru.ltow.bb.system.Stater
 
 class World: Disposable {
     private val prefs = Gdx.app.getPreferences("prefs")
@@ -27,9 +30,10 @@ class World: Disposable {
     val viewport: FitViewport
     private val environment = Environment()
 
-    private val groupStrategy: CameraGroupStrategy
-    private val decalBatch: DecalBatch
+    //DISPOSABLE
     private val modelBatch: ModelBatch
+    private val decalBatch: DecalBatch
+    private val groupStrategy: CameraGroupStrategy
     private val atlas: TextureAtlas
 
     private val entityFactory: EntityFactory
@@ -59,15 +63,27 @@ class World: Disposable {
         //ENGINE
         engine = Engine()
 
-        //RENDERER
-        groupStrategy = CameraGroupStrategy(camera)
-        decalBatch = DecalBatch(groupStrategy)
-        modelBatch = ModelBatch()
-        engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
+        //SIGNALS/LISTENERS
+        val stateChanged = Signal<Entity>()
+        val animationInvalidated = AddToSetOnReceive<Entity>()
+        stateChanged.add(animationInvalidated)
 
-        //ANIMATOR
-        val dummyListener = Listener<Entity> { _, _ -> Unit }
-        engine.addSystem(Animator(atlas,dummyListener,dummyListener))
+        //SYSTEMS
+
+            //RENDERER
+            groupStrategy = CameraGroupStrategy(camera)
+            decalBatch = DecalBatch(groupStrategy)
+            modelBatch = ModelBatch()
+            engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
+
+            //ANIMATOR
+            engine.addSystem(Animator(atlas,animationInvalidated))
+
+            //STATER
+            engine.addSystem(Stater(camera,stateChanged))
+
+            //CONTROLLER
+            engine.addSystem(Controller())
 
         //ENTITYFACTORY
         entityFactory = EntityFactory(atlas)

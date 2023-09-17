@@ -1,27 +1,38 @@
 package ru.ltow.bb.system
 
 import com.badlogic.ashley.core.*
-import com.badlogic.ashley.signals.Listener
-import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion
 import ru.ltow.bb.component.Billboard
 import com.badlogic.gdx.utils.Array
+import ru.ltow.bb.animation.AnimationBase
+import ru.ltow.bb.component.Animated
+import ru.ltow.bb.component.Name
+import ru.ltow.bb.component.State
+import ru.ltow.bb.listener.AddToSetOnReceive
 
 class Animator(
     val atlas: TextureAtlas,
-    val facingChanged: Listener<Entity>,
-    val stateChanged: Listener<Entity>
+    val animationInvalidated: AddToSetOnReceive<Entity>
 ): EntitySystem() {
-    enum class State { STAND,WALK,LIFTED }
-    enum class Face { SW,SE,NE,NW }
-    private val spritePacks = HashMap<String,HashMap<Pair<State,Face>,Array<TextureAtlas.AtlasRegion>>>()
+    private val atlasRegions = HashMap<
+        String,
+        HashMap<
+            Pair<State.Value,State.Face>,
+            Array<AtlasRegion>
+        >
+    >()
 
-    private lateinit var billboards: ImmutableArray<Entity>
+    private lateinit var nameMapper: ComponentMapper<Name>
+    private lateinit var stateMapper: ComponentMapper<State>
+    private lateinit var animatedMapper: ComponentMapper<Animated>
     private lateinit var billboardMapper: ComponentMapper<Billboard>
 
     override fun addedToEngine(engine: Engine?) {
         if(engine != null) {
-            billboards = engine.getEntitiesFor(Family.all(Billboard::class.java).get())
+            nameMapper = ComponentMapper.getFor(Name::class.java)
+            stateMapper = ComponentMapper.getFor(State::class.java)
+            animatedMapper = ComponentMapper.getFor(Animated::class.java)
             billboardMapper = ComponentMapper.getFor(Billboard::class.java)
         }
         super.addedToEngine(engine)
@@ -29,22 +40,37 @@ class Animator(
 
     init {
         val name = "toad"
-        var path :String
-        var regions: Array<TextureAtlas.AtlasRegion>
+        var regions: Array<AtlasRegion>
 
-        if (spritePacks.put(name,HashMap()) != null) throw IllegalArgumentException("повторение $name")
+        if (atlasRegions.put(name,HashMap()) != null) throw IllegalArgumentException("повторение $name")
 
-        State.values().forEach { state ->
-            Face.values().forEach { face ->
-                path = "creatures/$name/${state.name}/${face.name}"
-                regions = atlas.findRegions(path)
-                if(regions.isEmpty) throw IllegalArgumentException("отсутствуют регионы $path")
-                spritePacks[name]?.put(Pair(state,face),regions)
+        State.Value.values().forEach { state ->
+            State.Face.values().forEach { face ->
+                regions = getAtlasRegions("creatures/$name/${state.name}/${face.name}")
+                atlasRegions[name]?.put(Pair(state,face),regions)
             }
         }
     }
 
     override fun update(deltaTime: Float) {
+        animationInvalidated.entities.forEach { e ->
+            val state = stateMapper.get(e)
+            val regions = getRegions(nameMapper.get(e).value,Pair(state.value,state.face))
+            animatedMapper.get(e).setAnimation(AnimationBase(regions))
+        }
+        animationInvalidated.entities.clear()
+        super.update(deltaTime)
+    }
 
+    private fun getRegions(name: String, key: Pair<State.Value,State.Face>): Array<AtlasRegion> {
+        val regions = atlasRegions[name]?.get(key)
+        regions ?: throw IllegalArgumentException("отсутствуют регионы $name/${key.first.name}/${key.second.name}")
+        return regions
+    }
+
+    private fun getAtlasRegions(path: String): Array<AtlasRegion> {
+        val regions = atlas.findRegions(path)
+        if(regions == null || regions.isEmpty) throw IllegalArgumentException("отсутствуют регионы $path")
+        return regions
     }
 }

@@ -3,13 +3,11 @@ package ru.ltow.bb.component
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
+import ru.ltow.bb.animation.AnimationBase
 
 class Animated(
-    animation: Animation<TextureRegion>
+    private var animation: AnimationBase
 ): Component {
-    private var looped: Animation<TextureRegion>? = null
-    private var finite: Animation<TextureRegion>? = null
-
     val loopedAnimations = listOf(
         Animation.PlayMode.LOOP,
         Animation.PlayMode.LOOP_PINGPONG,
@@ -17,12 +15,13 @@ class Animated(
         Animation.PlayMode.LOOP_REVERSED
     )
 
-    init { setAnimation(animation) }
+    init { animation.playMode = Animation.PlayMode.LOOP }
 
-    fun setAnimation(a: Animation<TextureRegion>) {
-        if (loopedAnimations.contains(a.playMode)) looped = a
-        else finite = a
+    fun setAnimation(a: AnimationBase) {
+        animation = a
     }
 
-    //fun getFrame(delta: Float): TextureRegion
+    fun getKeyFrame(delta: Float): TextureRegion {
+        return animation.getKeyFrame(delta)
+    }
 }
