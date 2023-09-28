@@ -3,12 +3,12 @@ package ru.ltow.bb
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.VertexAttributes
-import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
+import ru.ltow.bb.animation.AnimationBase
 import ru.ltow.bb.component.Animated
 import ru.ltow.bb.component.Model
 import ru.ltow.bb.component.Billboard
@@ -32,9 +32,9 @@ class EntityFactory(
     fun toad(): Entity = Entity()
         .add(Billboard(
             0f,0f,0f,
-            atlas.findRegion("creature/toad/idle/sw/",1)
+            atlas.findRegion("creature/toad/stand/sw/",1)
         ))
         .add(
-            Animated(Animation(200f,atlas.findRegions("creature/toad/idle/sw/")))
+            Animated(AnimationBase(atlas.findRegions("creature/toad/stand/sw/")))
         )
 }

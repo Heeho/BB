@@ -46,7 +46,7 @@ class Animator(
 
         State.Value.values().forEach { state ->
             State.Face.values().forEach { face ->
-                regions = getAtlasRegions("creatures/$name/${state.name}/${face.name}")
+                regions = getAtlasRegions("creature/$name/${state.name}/${face.name}/")
                 atlasRegions[name]?.put(Pair(state,face),regions)
             }
         }
@@ -64,7 +64,7 @@ class Animator(
 
     private fun getRegions(name: String, key: Pair<State.Value,State.Face>): Array<AtlasRegion> {
         val regions = atlasRegions[name]?.get(key)
-        regions ?: throw IllegalArgumentException("отсутствуют регионы $name/${key.first.name}/${key.second.name}")
+        regions ?: throw IllegalArgumentException("отсутствуют регионы $name/${key.first.name}/${key.second.name}/")
         return regions
     }
 
