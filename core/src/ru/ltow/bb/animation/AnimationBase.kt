@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Array
 
 class AnimationBase(
     keyFrames: Array<TextureAtlas.AtlasRegion>,
-    frameDuration: Float = 100f
-): Animation<TextureAtlas.AtlasRegion>(frameDuration,keyFrames) {
-
-}
+    playMode: PlayMode = PlayMode.LOOP,
+    frameDuration: Float = 200f
+): Animation<TextureAtlas.AtlasRegion>(frameDuration, keyFrames, playMode)

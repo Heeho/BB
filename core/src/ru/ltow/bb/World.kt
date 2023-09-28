@@ -15,10 +15,9 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.ltow.bb.listener.AddToSetOnReceive
-import ru.ltow.bb.system.Animator
 import ru.ltow.bb.system.Controller
 import ru.ltow.bb.system.Renderer
-import ru.ltow.bb.system.Stater
+import ru.ltow.bb.system.StateMachine
 
 class World: Disposable {
     private val prefs = Gdx.app.getPreferences("prefs")
@@ -58,7 +57,7 @@ class World: Disposable {
         environment.add(directionalLight)
 
         //TEXTURES
-        atlas = TextureAtlas(Gdx.files.internal("sprite/sprite.atlas"))
+        atlas = TextureAtlas(Gdx.files.internal("atlas/animation.atlas"))
 
         //ENGINE
         engine = Engine()
@@ -76,11 +75,8 @@ class World: Disposable {
             modelBatch = ModelBatch()
             engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
 
-            //ANIMATOR
-            engine.addSystem(Animator(atlas,animationInvalidated))
-
-            //STATER
-            engine.addSystem(Stater(camera,stateChanged))
+            //STATEMACHINE
+            engine.addSystem(StateMachine())
 
             //CONTROLLER
             engine.addSystem(Controller())

@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.ltow.bb.Camera
-import ru.ltow.bb.component.Animated
+import ru.ltow.bb.component.Animations
 import ru.ltow.bb.component.Model
 import ru.ltow.bb.component.Billboard
 
@@ -25,7 +25,7 @@ class Renderer(
     private lateinit var modelEntities: ImmutableArray<Entity>
     private lateinit var billboardEntities: ImmutableArray<Entity>
     private lateinit var billboardMapper: ComponentMapper<Billboard>
-    private lateinit var animatedMapper: ComponentMapper<Animated>
+    private lateinit var animationsMapper: ComponentMapper<Animations>
     private lateinit var modelMapper: ComponentMapper<Model>
 
     override fun addedToEngine(engine: Engine?) {
@@ -33,7 +33,7 @@ class Renderer(
             modelEntities = engine.getEntitiesFor(Family.one(Model::class.java).get())
             billboardEntities = engine.getEntitiesFor(Family.one(Billboard::class.java).get())
             billboardMapper = ComponentMapper.getFor(Billboard::class.java)
-            animatedMapper = ComponentMapper.getFor(Animated::class.java)
+            animationsMapper = ComponentMapper.getFor(Animations::class.java)
             modelMapper = ComponentMapper.getFor(Model::class.java)
         }
         super.addedToEngine(engine)
@@ -58,7 +58,7 @@ class Renderer(
         billboardEntities.forEach {
             decalBatch.add(
                 billboardMapper.get(it).getBillboard(camera).apply {
-                    this.textureRegion = animatedMapper.get(it).getKeyFrame(deltaTime)
+                    this.textureRegion = animationsMapper.get(it).getKeyFrame(deltaTime)
                 }
             )
         }

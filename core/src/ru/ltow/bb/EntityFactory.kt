@@ -8,16 +8,37 @@ import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
+import com.badlogic.gdx.utils.Array
 import ru.ltow.bb.animation.AnimationBase
-import ru.ltow.bb.component.Animated
-import ru.ltow.bb.component.Model
-import ru.ltow.bb.component.Billboard
-import ru.ltow.bb.component.Player
+import ru.ltow.bb.component.*
+import ru.ltow.bb.system.StateMachine
 
 class EntityFactory(
     private val atlas: TextureAtlas
 ) {
-    private val ANIMATION_FRAME_DURATION = 200f
+    private val animations = HashMap<
+        String,
+        HashMap<
+            Pair<StateMachine.State, StateMachine.Face>,
+            AnimationBase
+        >
+    >()
+
+    init {
+        val name = "toad"
+
+        if (animations.put(name,HashMap()) != null) throw IllegalArgumentException("duplicate name: $name")
+
+        StateMachine.State.values().forEach { state ->
+            StateMachine.Face.values().forEach { face ->
+                animations[name]?.put(
+                    Pair(state,face),
+                    AnimationBase(getAtlasRegions("creature/$name/${state.name}/${face.name}/"))
+                )
+            }
+        }
+    }
+
     fun cube(): Entity {
         return Entity().apply {
             add(Model(ModelBuilder().createBox(
@@ -29,12 +50,17 @@ class EntityFactory(
     }
 
     fun player(): Entity = toad().apply { add(Player()) }
+
     fun toad(): Entity = Entity()
         .add(Billboard(
             0f,0f,0f,
-            atlas.findRegion("creature/toad/stand/sw/",1)
+            animations["toad"]!![Pair(StateMachine.State.STAND,StateMachine.Face.SW)]!!.getKeyFrame(0f)
         ))
-        .add(
-            Animated(AnimationBase(atlas.findRegions("creature/toad/stand/sw/")))
-        )
+        .add(Animations(animations["toad"]!!))
+
+    private fun getAtlasRegions(path: String): Array<TextureAtlas.AtlasRegion> {
+        val regions = atlas.findRegions(path)
+        if(regions == null || regions.isEmpty) throw IllegalArgumentException("couldn't find regions: $path")
+        return regions
+    }
 }
