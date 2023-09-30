@@ -3,24 +3,27 @@ package ru.ltow.bb
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.VertexAttributes
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.g3d.Material
 import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.utils.Array
-import ru.ltow.bb.animation.AnimationBase
 import ru.ltow.bb.component.*
 import ru.ltow.bb.system.StateMachine
 
 class EntityFactory(
     private val atlas: TextureAtlas
 ) {
+    val ANIMATION_FRAME_DURATION = .1f
+
     private val animations = HashMap<
         String,
         HashMap<
             Pair<StateMachine.State, StateMachine.Face>,
-            AnimationBase
+            Animation<TextureRegion>
         >
     >()
 
@@ -33,7 +36,7 @@ class EntityFactory(
             StateMachine.Face.values().forEach { face ->
                 animations[name]?.put(
                     Pair(state,face),
-                    AnimationBase(getAtlasRegions("creature/$name/${state.name}/${face.name}/"))
+                    Animation(ANIMATION_FRAME_DURATION,getAtlasRegions("creature/$name/${state.name}/${face.name}/"))
                 )
             }
         }
