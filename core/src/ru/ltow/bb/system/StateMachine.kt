@@ -18,25 +18,37 @@ class StateMachine: EntitySystem() {
         }
         super.addedToEngine(engine)
     }
-
-    override fun update(deltaTime: Float) {
-        /*entities.forEach {
-            if(newFace(it) || newState(it))
-                stateMapper.get(it).current = State.WALK
-        }*/
-        super.update(deltaTime)
+    
+    override fun update(delta: Float) {
+        entities.forEach { e ->
+            val s = stateMapper.get(e)
+            s.time = if(e in stateInvalid) {
+                if(changeState(e)) 0f
+                else s.time + delta
+            } else s.time + delta
+        }
     }
-
-    private fun newFace(e: Entity): Boolean {
-        // f( stateMapper.get(e).face, camera)
-        return false
+    
+    private fun changeState(e: Entity): Boolean {
+        val s = stateMapper.get(e)
+        return if(s.current == new)
+        false
+        else {
+            all[s.current].remove(e)
+            all[new].add(e)
+            s.current = new
+            true
+        }
     }
-    private fun newState(e: Entity): Boolean {
-        // f( stateMapper.get(e).value, Motion(if any), etc. )
-        return false
-    }
-
+  
     companion object {
+        val all = emptyMap()
+        init {
+            enumValues<State>().forEach {
+                all.add(it,emptyMutableArray())
+            }
+        }
+        
         fun calculateFace(v: Vector2): Face {
             return if (v.x >= 0 && v.y >= 0) Face.NE
             else if (v.x >= 0 && v.y < 0) Face.SE
