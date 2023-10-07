@@ -20,24 +20,54 @@ class StateMachine: EntitySystem() {
     }
     
     override fun update(delta: Float) {
-        entities.forEach { e ->
+        entities.forEach { e =>
             val s = stateMapper.get(e)
-            s.time = if(e in stateInvalid) {
-                if(changeState(e)) 0f
-                else s.time + delta
-            } else s.time + delta
+            val cur = s.current
+            val new = nextStateFrom(e,s)
+            if(cur == new) s.time += delta
+            else {
+                all[cur].remove(e)
+                all[new].add(e)
+                s.current = new
+                s.time = 0f
+            }
         }
     }
     
-    private fun changeState(e: Entity): Boolean {
-        val s = stateMapper.get(e)
-        return if(s.current == new)
-        false
-        else {
-            all[s.current].remove(e)
-            all[new].add(e)
-            s.current = new
-            true
+    private fun nextStateFrom(e: Entity, s: State): State {
+        when(s.current) {
+            STAND => {
+                if(attacking(e)) ATTACK
+                else if(falling(e)) FALL
+                else if(walking(e)) WALK
+                else if(acting(e)) ACT
+                else STAND
+            }
+            WALK => {
+                if(attacking(e)) ATTACK
+                else if(falling(e)) FALL
+                else if(!walking(e)) STAND
+                else WALK
+            }
+            FALL => {
+                if(attacking(e)) ATTACK
+                if(!falling(e)) STAND
+            }
+            ACT => {
+                if(attacking(e)) ATTACK
+                else if(falling(e)) FALL
+                else if(walking(e)) WALK
+                else if(!acting(e)) STAND
+                else ACT
+            }
+            ATTACK => {
+                if(!attacking(e)) {
+                    if(falling(e)) FALL
+                    else if(walking(e)) WALK
+                    else STAND
+                }
+                else ATTACK
+            }
         }
     }
   
