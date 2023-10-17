@@ -2,17 +2,16 @@ package ru.ltow.bb.component
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.Animation
-import ru.ltow.bb.system.StateMachine
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 class Animations(
     private val animations: HashMap<
-        Pair<StateMachine.State,StateMachine.Face>,
+        Pair<State.Value,State.Face>,
             Animation<TextureRegion>
     >
 ): Component {
-    private var stateTime = 0f
-    private var current = animations[Pair(StateMachine.State.STAND,StateMachine.Face.SW)]!!
+    private var stateTime = 1f
+    private var current = animations[Pair(State.Value.STAND,State.Face.SW)]!!
 
     fun getKeyFrame(delta: Float): TextureRegion {
         stateTime += delta

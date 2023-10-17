@@ -12,17 +12,16 @@ import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder
 import com.badlogic.gdx.utils.Array
 import ru.ltow.bb.component.*
-import ru.ltow.bb.system.StateMachine
 
 class EntityFactory(
     private val atlas: TextureAtlas
 ) {
-    val ANIMATION_FRAME_DURATION = .1f
+    val ANIMATION_FRAME_DURATION = .2f
 
     private val animations = HashMap<
         String,
         HashMap<
-            Pair<StateMachine.State, StateMachine.Face>,
+            Pair<State.Value,State.Face>,
             Animation<TextureRegion>
         >
     >()
@@ -32,11 +31,15 @@ class EntityFactory(
 
         if (animations.put(name,HashMap()) != null) throw IllegalArgumentException("duplicate name: $name")
 
-        StateMachine.State.values().forEach { state ->
-            StateMachine.Face.values().forEach { face ->
+        State.Value.values().forEach { state ->
+            State.Face.values().forEach { face ->
                 animations[name]?.put(
                     Pair(state,face),
-                    Animation(ANIMATION_FRAME_DURATION,getAtlasRegions("creature/$name/${state.name}/${face.name}/"))
+                    Animation(
+                        ANIMATION_FRAME_DURATION,
+                        getAtlasRegions("creature/$name/${state.name}/${face.name}/"),
+                        Animation.PlayMode.LOOP
+                    )
                 )
             }
         }
@@ -57,7 +60,7 @@ class EntityFactory(
     fun toad(): Entity = Entity()
         .add(Billboard(
             0f,0f,0f,
-            animations["toad"]!![Pair(StateMachine.State.STAND,StateMachine.Face.SW)]!!.getKeyFrame(0f)
+            animations["toad"]!![Pair(State.Value.STAND,State.Face.SW)]!!.getKeyFrame(0f)
         ))
         .add(Animations(animations["toad"]!!))
 
