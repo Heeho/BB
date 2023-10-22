@@ -4,36 +4,85 @@ import com.badlogic.ashley.core.Component
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.signals.Signal
 
-class State(val owner: Entity): Component {
-  enum class Value { STAND,WALK,FALL }
-  enum class Face { NW,SW,NE,SE }
-  private val current: HashSet<Value> = hashSetOf(Value.STAND)
-  //сортируем для анимации
-  //{ s1,s2 =>
-  //  s1.ordinal < s2.ordinal
-  //}
+class State(
+  private val actions: Map<Value,()=>Unit>
+): Component {
+ enum class Value {
+  STAND(10),WALK(10),FALL(10),
+  USE(0),ATTACK(0)
 
-  private val flags = HashMap<Value,Boolean>()
+  val animationorder: Int
+ }
 
-  init {
-    Value.values().forEach { flags[it] = false }
-  }
+ private val current = TreeSet<Value>(
+   k1,k2 =>
+   return {
+     k1.animationorder - k2.animationorder
+   }
+ )
 
-  fun setflag(
-    key: Value,
-    value: Boolean
-  ) {
-    if (flags.put(key,value) == value) return
-    stateChanged.dispatch(owner)
-  }
+ init {
+   Value.values.forEach { s =>
+     if actions[s] == null
+       actions.put(s,{})
+   }
+   current.add(Value.STAND)
+ }
 
-  fun getflags() = flags
+ fun start(s: Value) {
+   when(s) {
+     STAND => {}
+     WALK => {
+       if current.contains(Value.FALL)
+         return
+       current.remove(Value.STAND)
+       current.remove(Value.USE)
+       current.add(s)
+     }
+     FALL => {
+       current.remove(Value.STAND)
+       current.remove(Value.WALK)
+       current.remove(Value.USE)
+       current.add(s)
+     }
+     USE => {
+       if current.contains(Value.STAND) {
+         current.remove(Value.ATTACK)
+         current.add(s)
+       }
+     }
+     ATTACK => {
+       current.remove(Value.USE)
+       current.add(s)
+     }
+   }
+ }
 
-  fun getanimation(): Value = current.first()
+ fun end(s: Value) {
+   when(s) {
+     STAND => {}
+     WALK => {
+       current.remove(s)
+       current.add(Value.STAND)
+     }
+     FALL => {
+       current.remove(s)
+       current.add(Value.STAND)
+     }
+     USE => {
+       current.remove(s)
+     }
+     ATTACK => {
+       current.remove(s)
+     }
+   }
+ }
 
-  fun getstates(): List<Value> = current.toList()
+ fun act() {
+    current.forEach { s=>
+      actions[s]()
+    }
+ }
 
-  companion object {
-    val stateChanged = Signal<Entity>()
-  }
+ fun animation(): Value = current.first()
 }
