@@ -57,12 +57,17 @@ class EntityFactory(
 
     fun player(): Entity = toad().apply { add(Player()) }
 
-    fun toad(): Entity = Entity()
-        .add(Billboard(
+    fun toad(): Entity {
+        val e = Entity()
+        val b = Billboard(
             0f,0f,0f,
             animations["toad"]!![Pair(State.Value.STAND,State.Face.SW)]!!.getKeyFrame(0f)
-        ))
-        .add(Animations(animations["toad"]!!))
+        )
+        val m = Motion()
+        val a = Animations(animations["toad"]!!)
+
+        return e.add(b).add(m).add(a).apply { this.add(State(b, m)) }
+    }
 
     private fun getAtlasRegions(path: String): Array<TextureAtlas.AtlasRegion> {
         val regions = atlas.findRegions(path)

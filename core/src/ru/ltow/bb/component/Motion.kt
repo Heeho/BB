@@ -1,10 +1,12 @@
 package ru.ltow.bb.component
 
 import com.badlogic.ashley.core.Component
-import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 
 class Motion(
-    var speed: Float
+    var speed: Float = 0f
 ): Component {
-    val vector = Vector2()
+    val vector = Vector3()
+
+    fun velocity(): Vector3 = vector.cpy().apply { this.setLength(speed) }
 }
