@@ -17,7 +17,7 @@ class StateMachine: EntitySystem {
 
   override fun update(delta: Float) {
     entities.forEach { e ->
-      stateMapper.get(e).actions.forEach { a ->
+      stateMapper.get(e).actions().forEach { a ->
         a.act(s)
     }
   }
