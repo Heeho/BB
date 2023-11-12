@@ -7,91 +7,93 @@ class State(
   private val billboard: Billboard,
   private val motion: Motion
 ): Component {
-  enum class Value(val animationorder: Int) {
+  enum class Action(val animationOrder: Int) {
     STAND(10),
-    WALK(10),
+    WALK(10) {
+      override fun act(s: State) {
+        s.billboard.translate(s.motion.velocity)
+      }
+    },
     FALL(10),
     USE(0),
     ATTACK(0)
+
+    abstract fun act(s: State)
   }
 
   enum class Face {
     SW,NW,SE,NE
+
+    fun get(v: Vector2): Face {
+      return
+      if (v.x >= 0 && v.y >= 0) Face.NE
+      else if (v.x >= 0 && v.y < 0) Face.SE
+      else if (v.x < 0 && v.y >= 0) Face.NW
+      else Face.SW
+    }
   }
 
-  private val current = TreeSet<Value>() {
+  private val current = TreeSet<Action>() {
     k1, k2 ->
-    k1.animationorder - k2.animationorder
+    k1.animationOrder - k2.animationOrder
   }
 
   init {
-    current.add(Value.STAND)
+    current.add(Action.STAND)
   }
 
-  fun start(s: Value) {
-    when(s) {
-      Value.STAND -> {}
-      Value.WALK -> {
-        if(current.contains(Value.FALL)) return
-        current.remove(Value.STAND)
-        current.remove(Value.USE)
-        current.add(s)
-      }
-      Value.FALL -> {
-        current.remove(Value.STAND)
-        current.remove(Value.WALK)
-        current.remove(Value.USE)
-        current.add(s)
-      }
-      Value.USE -> {
-        if(current.contains(Value.STAND)) {
-          current.remove(Value.ATTACK)
-          current.add(s)
+  fun start(a: Action) {
+    when(a) {
+      Action.STAND -> {}
+      Action.WALK -> {
+        if(!current.contains(Action.FALL)) {
+          if(current.add(a)) {
+            current.remove(Action.STAND)
+            current.remove(Action.USE)
+          }
         }
       }
-      Value.ATTACK -> {
-        current.remove(Value.USE)
-        current.add(s)
+      Action.FALL -> {
+        if(current.add(a)) {
+          current.remove(Action.STAND)
+          current.remove(Action.WALK)
+          current.remove(Action.USE)
+        }   
+      }
+      Action.USE -> {
+        if(current.contains(Action.STAND)) {
+          current.remove(Action.ATTACK)
+          current.add(a)
+        }
+      }
+      Action.ATTACK -> {
+        current.remove(Action.USE)
+        current.add(a)
       }
     }
   }
 
-  fun end(s: Value) {
-    when(s) {
-      Value.STAND -> {}
-      Value.WALK -> {
-        current.remove(s)
-        current.add(Value.STAND)
+  fun end(a: Action) {
+    when(a) {
+      Action.STAND -> {}
+      Action.WALK -> {
+        current.remove(a)
+        current.add(Action.STAND)
       }
-      Value.FALL -> {
-        current.remove(s)
-        current.add(Value.STAND)
+      Action.FALL -> {
+        current.remove(a)
+        current.add(Action.STAND)
       }
-      Value.USE -> {
-        current.remove(s)
+      Action.USE -> {
+        current.remove(a)
       }
-      Value.ATTACK -> {
-        current.remove(s)
-      }
-    }
-  }
-
-  fun act() {
-    current.forEach { s ->
-      when(s) {
-        Value.STAND -> {}
-        Value.WALK -> { walk() }
-        Value.FALL -> {}
-        Value.USE -> {}
-        Value.ATTACK -> {}
+      Action.ATTACK -> {
+        current.remove(a)
       }
     }
   }
 
-  private fun walk() {
-    billboard.translate(motion.velocity())
-  }
+  fun animation(): Action = current.first()
 
-  fun getAnimation(): Value = current.first()
-  fun getStates(): List<Value> = current.toList()
+  fun states(): List<Action> = current.toList()
 }
