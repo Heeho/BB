@@ -33,42 +33,42 @@ class State(
     }
   }
 
-  private val current = TreeSet<Action>() {
+  private val actions = TreeSet<Action>() {
     k1, k2 ->
     k1.animationOrder - k2.animationOrder
   }
 
   init {
-    current.add(Action.STAND)
+    actions.add(Action.STAND)
   }
 
   fun start(a: Action) {
     when(a) {
       Action.STAND -> {}
       Action.WALK -> {
-        if(!current.contains(Action.FALL)) {
-          if(current.add(a)) {
-            current.remove(Action.STAND)
-            current.remove(Action.USE)
+        if(!actions.contains(Action.FALL)) {
+          if(actions.add(a)) {
+            actions.remove(Action.STAND)
+            actions.remove(Action.USE)
           }
         }
       }
       Action.FALL -> {
-        if(current.add(a)) {
-          current.remove(Action.STAND)
-          current.remove(Action.WALK)
-          current.remove(Action.USE)
+        if(actions.add(a)) {
+          actions.remove(Action.STAND)
+          actions.remove(Action.WALK)
+          actions.remove(Action.USE)
         }   
       }
       Action.USE -> {
-        if(current.contains(Action.STAND)) {
-          current.remove(Action.ATTACK)
-          current.add(a)
+        if(actions.contains(Action.STAND)) {
+          actions.remove(Action.ATTACK)
+          actions.add(a)
         }
       }
       Action.ATTACK -> {
-        current.remove(Action.USE)
-        current.add(a)
+        actions.remove(Action.USE)
+        actions.add(a)
       }
     }
   }
@@ -77,23 +77,23 @@ class State(
     when(a) {
       Action.STAND -> {}
       Action.WALK -> {
-        current.remove(a)
-        current.add(Action.STAND)
+        actions.remove(a)
+        actions.add(Action.STAND)
       }
       Action.FALL -> {
-        current.remove(a)
-        current.add(Action.STAND)
+        actions.remove(a)
+        actioms.add(Action.STAND)
       }
       Action.USE -> {
-        current.remove(a)
+        actions.remove(a)
       }
       Action.ATTACK -> {
-        current.remove(a)
+        actions.remove(a)
       }
     }
   }
 
-  fun animation(): Action = current.first()
+  fun animation(): Action = actions.first()
 
-  fun states(): List<Action> = current.toList()
+  fun actions(): List<Action> = actions.toList()
 }
