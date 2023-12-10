@@ -1,6 +1,7 @@
 package ru.ltow.bb.component
 
 import com.badlogic.ashley.core.Component
+import com.badlogic.gdx.math.Vector2
 import java.util.*
 
 class State(
@@ -8,28 +9,43 @@ class State(
   private val motion: Motion
 ): Component {
   enum class Action(val animationOrder: Int) {
-    STAND(10),
-    WALK(10) {
+    STAND(10) {
       override fun act(s: State) {
-        s.billboard.translate(s.motion.velocity)
+        //NONE
       }
     },
-    FALL(10),
-    USE(0),
-    ATTACK(0)
+    WALK(10) {
+      override fun act(s: State) {
+        s.billboard.translate(s.motion.velocity())
+      }
+    },
+    FALL(10) {
+      override fun act(s: State) {
+        //NONE
+      }
+    },
+    USE(0) {
+      override fun act(s: State) {
+        //NONE
+      }
+    },
+    ATTACK(0) {
+      override fun act(s: State) {
+        //NONE
+      }
+    };
 
     abstract fun act(s: State)
   }
 
   enum class Face {
-    SW,NW,SE,NE
+    SW,NW,SE,NE;
 
     fun get(v: Vector2): Face {
-      return
-      if (v.x >= 0 && v.y >= 0) Face.NE
-      else if (v.x >= 0 && v.y < 0) Face.SE
-      else if (v.x < 0 && v.y >= 0) Face.NW
-      else Face.SW
+      return if (v.x >= 0 && v.y >= 0) NE
+      else if (v.x >= 0 && v.y < 0) SE
+      else if (v.x < 0 && v.y >= 0) NW
+      else SW
     }
   }
 
@@ -82,7 +98,7 @@ class State(
       }
       Action.FALL -> {
         actions.remove(a)
-        actioms.add(Action.STAND)
+        actions.add(Action.STAND)
       }
       Action.USE -> {
         actions.remove(a)

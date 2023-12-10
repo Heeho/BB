@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3
 class Motion(
     var speed: Float = 0f
 ): Component {
-    val vector = Vector3()
+    private val vector = Vector3()
 
     fun velocity(): Vector3 = vector.cpy().apply { this.setLength(speed) }
 }

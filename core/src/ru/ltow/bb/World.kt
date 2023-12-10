@@ -1,8 +1,6 @@
 package ru.ltow.bb
 
 import com.badlogic.ashley.core.Engine
-import com.badlogic.ashley.core.Entity
-import com.badlogic.ashley.signals.Signal
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
@@ -14,7 +12,6 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
-import ru.ltow.bb.listener.AddToSetOnReceive
 import ru.ltow.bb.system.Controller
 import ru.ltow.bb.system.Renderer
 import ru.ltow.bb.system.StateMachine
@@ -61,11 +58,6 @@ class World: Disposable {
 
         //ENGINE
         engine = Engine()
-
-        //SIGNALS/LISTENERS
-        val stateChanged = Signal<Entity>()
-        val animationInvalidated = AddToSetOnReceive<Entity>()
-        stateChanged.add(animationInvalidated)
 
         //SYSTEMS
 

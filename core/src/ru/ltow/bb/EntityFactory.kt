@@ -21,7 +21,7 @@ class EntityFactory(
     private val animations = HashMap<
         String,
         HashMap<
-            Pair<State.Value,State.Face>,
+            Pair<State.Action,State.Face>,
             Animation<TextureRegion>
         >
     >()
@@ -31,7 +31,7 @@ class EntityFactory(
 
         if (animations.put(name,HashMap()) != null) throw IllegalArgumentException("duplicate name: $name")
 
-        State.Value.values().forEach { state ->
+        State.Action.values().forEach { state ->
             State.Face.values().forEach { face ->
                 animations[name]?.put(
                     Pair(state,face),
@@ -55,13 +55,13 @@ class EntityFactory(
         }
     }
 
-    fun player(): Entity = toad().apply { add(Player()) }
+    fun player(): Entity = toad().apply { add(Player(this.getComponent(State::class.java))) }
 
     fun toad(): Entity {
         val e = Entity()
         val b = Billboard(
             0f,0f,0f,
-            animations["toad"]!![Pair(State.Value.STAND,State.Face.SW)]!!.getKeyFrame(0f)
+            animations["toad"]!![Pair(State.Action.STAND,State.Face.SW)]!!.getKeyFrame(0f)
         )
         val m = Motion()
         val a = Animations(animations["toad"]!!)
