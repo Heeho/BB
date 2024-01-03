@@ -7,15 +7,17 @@ import com.badlogic.gdx.math.Vector3
 import ru.ltow.bb.Camera
 
 class Billboard (
-    x: Float = 0f,
-    y: Float = 0f,
-    z: Float = 0f,
-    frame: TextureRegion
+  position: Vector3,
+  frame: TextureRegion
+  size: Float = 1f
 ): Component {
-    private val decal: Decal = Decal.newDecal(1f,1f,frame,true).apply {
-        setPosition(x,y,z)
-    }
-
-    fun getBillboard(camera: Camera) = decal.apply { lookAt(camera.position,camera.up) }
-    fun translate(v: Vector3) { decal.translate(v) }
+  private val decal: Decal = Decal.newDecal(size,size,frame,true).apply {
+    setPosition(
+      position.x,
+      position.y,
+      position.z
+    )
+  }
+  fun get(c: Camera) = decal.apply { lookAt(c.position,c.up) }
+  fun translate(v: Vector3) { decal.translate(v) }
 }
