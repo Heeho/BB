@@ -16,7 +16,10 @@ import ru.ltow.bb.system.Controller
 import ru.ltow.bb.system.Renderer
 import ru.ltow.bb.system.StateMachine
 
-class World: Disposable {
+class World(
+  val params: JSON = {"creatures":[{"name":"toad","speed":1}]}
+  // существа, их характеристики и прочее 
+): Disposable {
     private val prefs = Gdx.app.getPreferences("prefs")
     private val background = Color(prefs.getInteger("COLOR_BACKGROUND", 0x00ffffff.toInt()))
     private val ambientLightColor = Color(prefs.getInteger("COLOR_LIGHT_AMBIENT", 0xffffffff.toInt()))
@@ -34,6 +37,7 @@ class World: Disposable {
 
     private val entityFactory: EntityFactory
     val engine: Engine
+    val walk: EntityListener
 
     init {
         //CAMERA
@@ -58,23 +62,30 @@ class World: Disposable {
 
         //ENGINE
         engine = Engine()
+      
+        //MANAGERS
 
-        //SYSTEMS
+          //ANIMATION
+          val animationSystem = AnimationSystem(
+            atlas,
+            params.creatures,
+            camera.lookAt
+          )
+          engine.addSystem(animationSystem)
 
-            //RENDERER
-            groupStrategy = CameraGroupStrategy(camera)
-            decalBatch = DecalBatch(groupStrategy)
-            modelBatch = ModelBatch()
-            engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
+          //RENDERER
+          groupStrategy = CameraGroupStrategy(camera)
+          decalBatch = DecalBatch(groupStrategy)
+          modelBatch = ModelBatch()
+          engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
 
-            //STATEMACHINE
-            engine.addSystem(StateMachine())
+          //CONTROLLER
+          engine.addSystem(Controller())
 
-            //CONTROLLER
-            engine.addSystem(Controller())
+        //FACTORIES
 
-        //ENTITYFACTORY
-        entityFactory = EntityFactory(atlas)
+          //ENTITYFACTORY
+          entityFactory = EntityFactory(animationSystem)
 
         //TEST
         //engine.addEntity(entityFactory.cube())
