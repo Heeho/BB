@@ -7,9 +7,14 @@ import com.badlogic.gdx.math.Matrix4
 
 class Model (
     model: Model,
-    x: Float = 0f,
-    y: Float = 0f,
-    z: Float = 0f
+    position: Vector3 = Vector3()
 ): Component {
-    val modelInstance = ModelInstance(model, Matrix4().setToTranslation(x,y,z))
+  val instance = ModelInstance(
+    model,
+    Matrix4().setToTranslation(
+      position.x,
+      position.y,
+      position.z
+    )
+  )
 }
