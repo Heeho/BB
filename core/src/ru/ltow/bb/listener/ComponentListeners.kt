@@ -1,43 +1,28 @@
 package ru.ltow.bb
 
 class ComponentListeners (
-  engine: Engine,
+  engine: Engine
 ) {
-  val standers = engine.getEntitiesFor(Family.all(Animation,Face,Stand)), //.not(Use,Attack)),
-  val walkers = engine.getEntitiesFor(Family.all(Animation,Face,Walk)), //.not(Attack)),
-
   init {
     engine.addEntityListener(
-      standers,
-      AnimationListener(Action.STAND)
+      engine.getEntitiesFor(Family.not(Stand,Walk)),
+      EntityListener {
+        override fun entityAdded(e: Entity) {
+          e.add(Stand())
+        }
+        override fun entityRemoved(e: Entity) {}
+      }
     )
-
     engine.addEntityListener(
-      walkers,
-      AnimationListener(Action.WALK)
+      engine.getEntitiesFor(Family.all(Walk)), //.not(Attack)),
+      EntityListener {
+        override fun entityAdded(e: Entity) {
+          e.remove(Stand::java.class)
+        }
+        override fun entityRemoved(e: Entity) {
+          e.add(Stand())
+        }
+      }
     )
-    engine.addEntityListener(
-      walkers,
-      FaceListener { e -> Mappers.walk.get(e).vector }
-    )
-  }
-
-  class AnimationListener(
-    val ac: Action
-  ): EntityListener {
-    override fun entityAdded(e: Entity) {
-      val a = Mappers.animation.get(e)
-      a.current.set(a.pack[ac])
-    }
-    override fun entityRemoved(e: Entity) {}
-  }
-
-  class FaceListener(
-    val v: (Entity) -> Vector3
-  ): EntityListener {
-    override fun entityAdded(e: Entity) {
-      Mappers.face.get(e).vector = v(e)
-    }
-    override fun entityRemoved(e: Entity) {}
   }
 }
