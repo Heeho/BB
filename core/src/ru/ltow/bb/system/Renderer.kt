@@ -15,57 +15,43 @@ import ru.ltow.bb.component.Model
 import ru.ltow.bb.component.Billboard
 
 class Renderer(
-    private val camera: Camera,
-    private val viewport: FitViewport,
-    private val modelBatch: ModelBatch,
-    private val decalBatch: DecalBatch,
-    private val background: Color,
-    private val environment: Environment
+  private val camera: Camera,
+  private val viewport: FitViewport,
+  private val modelBatch: ModelBatch,
+  private val decalBatch: DecalBatch,
+  private val background: Color,
+  private val environment: Environment
 ): EntitySystem() {
-    private lateinit var modelEntities: ImmutableArray<Entity>
-    private lateinit var billboardEntities: ImmutableArray<Entity>
-    private lateinit var billboardMapper: ComponentMapper<Billboard>
-    private lateinit var animationsMapper: ComponentMapper<Animations>
-    private lateinit var modelMapper: ComponentMapper<Model>
+  val models: ImmutableArray<Entity>
+  val billboards: ImmutableArray<Entity>
 
-    override fun addedToEngine(engine: Engine?) {
-        if(engine != null) {
-            modelEntities = engine.getEntitiesFor(Family.one(Model::class.java).get())
-            billboardEntities = engine.getEntitiesFor(Family.one(Billboard::class.java).get())
-            billboardMapper = ComponentMapper.getFor(Billboard::class.java)
-            animationsMapper = ComponentMapper.getFor(Animations::class.java)
-            modelMapper = ComponentMapper.getFor(Model::class.java)
-        }
-        super.addedToEngine(engine)
+  override fun addedToEngine(e: Engine) {
+    models = engine.getEntitiesFor(Family.all(Model::class.java).get())
+    billboards = engine.getEntitiesFor(Family.all(Billboard::class.java).get())
+    super()
+  }
+       
+  override fun update(dt: Float) {
+    viewport.apply()
+    camera.update()
+
+    Gdx.gl.glClearColor(background.r, background.g, background.b, background.a)
+    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
+
+    modelBatch.begin(camera)
+    modelEntities.forEach {
+      modelBatch.render(Mappers.model.get(it).instance,environment)
     }
 
-    override fun update(deltaTime: Float) {
-        viewport.apply()
-        camera.update()
-
-        Gdx.gl.glClearColor(background.r, background.g, background.b, background.a)
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT or GL20.GL_DEPTH_BUFFER_BIT)
-
-        modelBatch.begin(camera)
-
-        modelEntities.forEach {
-            modelBatch.render(
-                modelMapper.get(it).modelInstance,
-                environment
-            )
-        }
-
-        billboardEntities.forEach {
-            decalBatch.add(
-                billboardMapper.get(it).getBillboard(camera).apply {
-                    this.textureRegion = animationsMapper.get(it).getKeyFrame(deltaTime)
-                }
-            )
-        }
-
-        modelBatch.end()
-        decalBatch.flush()
-
-        super.update(deltaTime)
+    billboards.forEach {
+      decalBatch.add(
+        Mappers.billboard.get(it).get(camera)
+      ) 
     }
+
+    modelBatch.end()
+    decalBatch.flush()
+
+    super.update(deltaTime)
+  }
 }
