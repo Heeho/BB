@@ -15,10 +15,11 @@ class Animation(
 ): Component {
   private var time = 0f
   private var current: Map<AnimationSystem.Face,Animation<TextureRegion>>
-    set(value) {
-      time = 0f
-      field = value
-    }
+  
+  fun set(a: AnimationSystem.Action) {
+    time = 0f
+    current = pack[a]
+  }
 
   fun frame(
     f: AnimationSystem.Face,
