@@ -10,12 +10,5 @@ class Model (
     model: Model,
     position: Vector3 = Vector3()
 ): Component {
-  val instance = ModelInstance(
-    model,
-    Matrix4().setToTranslation(
-      position.x,
-      position.y,
-      position.z
-    )
-  )
+    val instance = ModelInstance(model,Matrix4().setToTranslation(position))
 }

@@ -8,16 +8,11 @@ import ru.ltow.bb.Camera
 
 class Billboard (
   position: Vector3,
-  frame: TextureRegion
+  frame: TextureRegion,
   size: Float = 1f
 ): Component {
-  private val decal: Decal = Decal.newDecal(size,size,frame,true).apply {
-    setPosition(
-      position.x,
-      position.y,
-      position.z
-    )
-  }
+  val decal: Decal = Decal.newDecal(size,size,frame,true).apply { setPosition(position) }
+
   fun get(c: Camera) = decal.apply { lookAt(c.position,c.up) }
   fun translate(v: Vector3) { decal.translate(v) }
 }

@@ -1,12 +1,18 @@
-package ru.ltow.bb
+package ru.ltow.bb.listener
+
+import com.badlogic.ashley.core.Engine
+import com.badlogic.ashley.core.Entity
+import com.badlogic.ashley.core.EntityListener
+import com.badlogic.ashley.core.Family
+import ru.ltow.bb.component.*
 
 class ComponentListeners (
   engine: Engine
 ) {
   init {
     engine.addEntityListener(
-      engine.getEntitiesFor(Family.not(Stand,Walk)),
-      EntityListener {
+      Family.exclude(Stand::class.java,Walk::class.java).get(),
+      object: EntityListener {
         override fun entityAdded(e: Entity) {
           e.add(Stand())
         }
@@ -14,10 +20,10 @@ class ComponentListeners (
       }
     )
     engine.addEntityListener(
-      engine.getEntitiesFor(Family.all(Walk)), //.not(Attack)),
-      EntityListener {
+      Family.all(Walk::class.java).get(),
+      object: EntityListener {
         override fun entityAdded(e: Entity) {
-          e.remove(Stand::java.class)
+          e.remove(Stand::class.java)
         }
         override fun entityRemoved(e: Entity) {
           e.add(Stand())

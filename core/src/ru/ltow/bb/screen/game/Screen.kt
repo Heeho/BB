@@ -17,11 +17,11 @@ class Screen(
     private val invertY = prefs.getBoolean("CONTROLS_INVERT_X",false)
     private val dragThreshold = prefs.getInteger("CONTROLS_DRAG_THRESHOLD",3)
 
-    private val controller = Controller(
+    private val controller = CameraController(
         dragThreshold,
         {
-            world.camera.rotateAroundX(invertY)
-            world.camera.rotateAroundY(invertX)
+            world.camera.rotateAroundLookAtY(invertY)
+            world.camera.rotateAroundLookAtX(invertX)
         },
         { screenX,screenY ->  },
         {  }

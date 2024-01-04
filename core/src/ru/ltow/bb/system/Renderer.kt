@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.ltow.bb.Camera
-import ru.ltow.bb.Mappers
 import ru.ltow.bb.component.Model
 import ru.ltow.bb.component.Billboard
+import ru.ltow.bb.component.Mappers
 
 class Renderer(
   private val camera: Camera,
