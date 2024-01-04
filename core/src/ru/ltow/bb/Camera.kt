@@ -21,6 +21,6 @@ class Camera (
         this.update()
     }
 
-    fun rotateAroundY(invert: Boolean = false, auto: Boolean = false) = rotateAround(lookAt,up,                           rotationSensivity * (if(invert) 1f else -1f) * (if(auto) 1f else Gdx.input.deltaX.toFloat()))
-    fun rotateAroundX(invert: Boolean = false, auto: Boolean = false) = rotateAround(lookAt,direction.cpy().crs(up).nor(),rotationSensivity * (if(invert) 1f else -1f) * (if(auto) 1f else Gdx.input.deltaY.toFloat()))
+    fun rotateAroundLookAtY(invert: Boolean = false, auto: Boolean = false) = rotateAround(lookAt,Vector3(0f,1f,0f),    rotationSensivity * (if(invert) 1f else -1f) * (if(auto) 1f else Gdx.input.deltaX.toFloat()))
+    fun rotateAroundLookAtX(invert: Boolean = false, auto: Boolean = false) = rotateAround(lookAt,direction.cpy().crs(up).nor(),rotationSensivity * (if(invert) 1f else -1f) * (if(auto) 1f else Gdx.input.deltaY.toFloat()))
 }
