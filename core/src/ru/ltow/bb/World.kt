@@ -12,13 +12,13 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight
 import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
+import ru.ltow.bb.input.Creature
 import ru.ltow.bb.system.Controller
 import ru.ltow.bb.system.Renderer
-import ru.ltow.bb.system.StateMachine
+import com.badlogic.gdx.utils.Array
 
 class World(
-  val params: JSON = {"creatures":[{"name":"toad","speed":1}]}
-  // существа, их характеристики и прочее 
+  creatures: Array<Creature> = Array(arrayOf(Creature("toad")))
 ): Disposable {
     private val prefs = Gdx.app.getPreferences("prefs")
     private val background = Color(prefs.getInteger("COLOR_BACKGROUND", 0x00ffffff.toInt()))
@@ -37,7 +37,6 @@ class World(
 
     private val entityFactory: EntityFactory
     val engine: Engine
-    val walk: EntityListener
 
     init {
         //CAMERA
@@ -63,24 +62,23 @@ class World(
         //ENGINE
         engine = Engine()
       
-        //MANAGERS
+        //LISTENERS
+        AnimationListeners(engine)
+        FaceListeners(engine)
+        ComponentListeners(engine)
 
-          //ANIMATION
-          val animationSystem = AnimationSystem(
-            atlas,
-            params.creatures,
-            camera.lookAt
-          )
-          engine.addSystem(animationSystem)
+        //ANIMATION
+        val animationSystem = AnimationSystem(atlas,creatures,camera.lookAt)
+        engine.addSystem(animationSystem)
 
-          //RENDERER
-          groupStrategy = CameraGroupStrategy(camera)
-          decalBatch = DecalBatch(groupStrategy)
-          modelBatch = ModelBatch()
-          engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
+        //RENDERER
+        groupStrategy = CameraGroupStrategy(camera)
+        decalBatch = DecalBatch(groupStrategy)
+        modelBatch = ModelBatch()
+        engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
 
-          //CONTROLLER
-          engine.addSystem(Controller())
+        //CONTROLLER
+        engine.addSystem(Controller())
 
         //FACTORIES
 
