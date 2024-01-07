@@ -2,7 +2,7 @@ package ru.ltow.bb.screen.menu
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
-import ru.ltow.bb.BaseScreen
+import ru.ltow.bb.screen.BaseScreen
 import ru.ltow.bb.Core
 import ru.ltow.bb.screen.game.Screen
 

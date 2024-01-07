@@ -1,4 +1,4 @@
-package ru.ltow.bb
+package ru.ltow.bb.screen
 
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.scenes.scene2d.ui.Table

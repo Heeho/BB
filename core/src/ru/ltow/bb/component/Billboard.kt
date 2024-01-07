@@ -13,6 +13,8 @@ class Billboard (
 ): Component {
   val decal: Decal = Decal.newDecal(size,size,frame,true).apply { setPosition(position) }
 
-  fun get(c: Camera) = decal.apply { lookAt(c.position,c.up) }
-  fun translate(v: Vector3) { decal.translate(v) }
+  fun get(c: Camera) = decal.apply { lookAt(decal.position.cpy().sub(c.direction),c.up) }
+  fun translate(v: Vector3) {
+    decal.translate(v)
+  }
 }

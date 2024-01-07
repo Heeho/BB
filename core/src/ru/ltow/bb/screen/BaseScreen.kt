@@ -1,7 +1,7 @@
-package ru.ltow.bb
+package ru.ltow.bb.screen
 
-import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.ScreenAdapter
+import ru.ltow.bb.Core
 
 open class BaseScreen (
     val core: Core,
@@ -13,8 +13,8 @@ open class BaseScreen (
     }
 
     override fun render(delta: Float) {
-        ui.act(delta)
         ui.viewport.apply()
+        ui.act(delta)
         ui.draw()
     }
 
@@ -24,5 +24,6 @@ open class BaseScreen (
 
     override fun resize(width: Int, height: Int) {
         ui.viewport.update(width,height,true)
+        ui.viewport.apply()
     }
 }

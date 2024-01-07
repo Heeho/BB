@@ -1,7 +1,7 @@
 package ru.ltow.bb.screen.prefs
 
 import com.badlogic.gdx.Gdx
-import ru.ltow.bb.BaseScreen
+import ru.ltow.bb.screen.BaseScreen
 import ru.ltow.bb.Core
 
 class Screen(

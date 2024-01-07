@@ -5,27 +5,33 @@ import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ArrayMap
 import ru.ltow.bb.system.AnimationSystem
+import ru.ltow.bb.system.FaceSystem
 
 class Animation(
-  private val pack: ArrayMap<AnimationSystem.Action, ArrayMap<AnimationSystem.Face, Animation<TextureRegion>>>
+  private val pack: ArrayMap<AnimationSystem.Action, ArrayMap<FaceSystem.Face, Animation<TextureRegion>>>
 ): Component {
   private var time = 0f
-  private var current: ArrayMap<AnimationSystem.Face,Animation<TextureRegion>>
+  private var currentpack: ArrayMap<FaceSystem.Face,Animation<TextureRegion>>
+  private var currentanimation: Animation<TextureRegion>
 
   init {
-    current = pack[AnimationSystem.Action.STAND]
+    currentpack = pack[AnimationSystem.Action.STAND]
+    currentanimation = currentpack[FaceSystem.Face.SE]
   }
 
-  fun set(a: AnimationSystem.Action) {
+  fun setpack(a: AnimationSystem.Action) {
     time = 0f
-    current = pack[a]
+    currentpack = pack[a]
+  }
+
+  fun setface(f: FaceSystem.Face) {
+    currentanimation = currentpack[f]
   }
 
   fun frame(
-    f: AnimationSystem.Face,
-    dt: Float
+    dt: Float = 0f
   ): TextureRegion {
     time += dt
-    return current[f].getKeyFrame(time)
+    return currentanimation.getKeyFrame(time)
   }
 }

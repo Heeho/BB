@@ -1,4 +1,4 @@
-package ru.ltow.bb
+package ru.ltow.bb.screen
 
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.BitmapFont

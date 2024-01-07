@@ -2,6 +2,7 @@ package ru.ltow.bb
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g3d.*
@@ -13,11 +14,8 @@ import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.ltow.bb.component.Creature
-import ru.ltow.bb.system.Controller
-import ru.ltow.bb.system.Renderer
 import com.badlogic.gdx.utils.Array
-import ru.ltow.bb.listener.*
-import ru.ltow.bb.system.AnimationSystem
+import ru.ltow.bb.system.*
 
 class World(
   creatures: Array<Creature> = Array(arrayOf(Creature("toad")))
@@ -63,33 +61,37 @@ class World(
           //TEXTURES
           atlas = TextureAtlas(Gdx.files.internal("atlas/animation.atlas"))
 
-        //ENGINE
-        engine = Engine()
-      
-          //LISTENERS
-          AnimationListeners(engine)
-          FaceListeners(engine)
-          ComponentListeners(engine)
-
-          //SYSTEMS
-
-            //ANIMATION
-            val animationSystem = AnimationSystem(atlas,creatures,camera)
-            engine.addSystem(animationSystem)
-
-            //RENDERER
-            groupStrategy = CameraGroupStrategy(camera)
-            decalBatch = DecalBatch(groupStrategy)
-            modelBatch = ModelBatch()
-            engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
-
-            //CONTROLLER
-            engine.addSystem(Controller())
 
         //FACTORIES
 
-          //ENTITYFACTORY
-          entityFactory = EntityFactory()
+            //ENTITYFACTORY
+            entityFactory = EntityFactory()
+
+        //ENGINE
+        engine = Engine()
+
+            //SYSTEMS
+                val ITERATING_SYSTEM_INTERVAL = 0.05f
+
+                //ANIMATION
+                engine.addSystem(AnimationSystem(atlas,creatures,ITERATING_SYSTEM_INTERVAL))
+                engine.addSystem(FaceSystem(camera,ITERATING_SYSTEM_INTERVAL))
+
+                //ACTIONS
+                engine.addSystem(WalkSystem(ITERATING_SYSTEM_INTERVAL))
+
+                //RENDERER
+                groupStrategy = CameraGroupStrategy(camera)
+                decalBatch = DecalBatch(groupStrategy)
+                modelBatch = ModelBatch()
+                engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
+
+                //PLAYER
+                val player = PlayerSystem(camera,ITERATING_SYSTEM_INTERVAL)
+                engine.addSystem(player)
+
+            //CONTROLLER
+            Gdx.input.inputProcessor = InputMultiplexer(camera,player)
 
         //TEST
         engine.addEntity(entityFactory.cube(Vector3(1f,0f,0f)))

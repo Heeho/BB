@@ -1,4 +1,4 @@
-package ru.ltow.bb
+package ru.ltow.bb.system
 
 import com.badlogic.ashley.core.Entity
 import com.badlogic.gdx.graphics.Color

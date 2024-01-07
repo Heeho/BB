@@ -2,6 +2,7 @@ package ru.ltow.bb
 
 import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
+import ru.ltow.bb.screen.Skin
 import ru.ltow.bb.screen.menu.Screen
 
 class Core: Game() {

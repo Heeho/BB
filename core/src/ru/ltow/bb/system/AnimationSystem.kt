@@ -5,34 +5,58 @@ import com.badlogic.ashley.systems.IntervalSystem
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
-import ru.ltow.bb.component.Billboard
-import ru.ltow.bb.component.Creature
-import ru.ltow.bb.component.Face as FaceC
+import ru.ltow.bb.component.Face
 import ru.ltow.bb.component.Animation as AnimationC
 import com.badlogic.gdx.utils.Array
 import com.badlogic.gdx.utils.ArrayMap
-import ru.ltow.bb.Camera
-import ru.ltow.bb.component.Face
-import ru.ltow.bb.component.Mappers
 import com.badlogic.gdx.graphics.g2d.Animation
+import ru.ltow.bb.component.*
 
 class AnimationSystem (
   val atlas: TextureAtlas,
   val creaturedata: Array<Creature>,
-  val camera: Camera
-): IntervalSystem(0.045f) {
-  enum class Face { SE,SW,NW,NE }
+  i: Float
+): IntervalSystem(i) {
   enum class Action { STAND,WALK,FALL,USE,ATTACK }
   
   val ANIMATION_FRAME_DURATION = .2f
   lateinit var animations: ImmutableArray<Entity>
-  lateinit var packs: ArrayMap<String,ArrayMap<Action,ArrayMap<Face, Animation<TextureRegion>>>>
+  lateinit var packs: ArrayMap<String,ArrayMap<Action,ArrayMap<FaceSystem.Face,Animation<TextureRegion>>>>
   lateinit var creatures: ImmutableArray<Entity>
 
   override fun addedToEngine(e: Engine) {
-    animations = engine.getEntitiesFor(Family.all(AnimationC::class.java, FaceC::class.java, Billboard::class.java).get())
-    creatures = engine.getEntitiesFor(Family.all(Creature::class.java).exclude(AnimationC::class.java,FaceC::class.java).get())
+    animations = e.getEntitiesFor(Family.all(AnimationC::class.java, Face::class.java, Billboard::class.java).get())
+    creatures = e.getEntitiesFor(Family.all(Creature::class.java).exclude(AnimationC::class.java,Face::class.java).get())
     packs = creatures(creaturedata)
+
+    e.addEntityListener(
+      Family.all(AnimationC::class.java, Stand::class.java).exclude(Use::class.java, Attack::class.java).get(),
+      object: EntityListener {
+        override fun entityAdded(e: Entity) {
+          Mappers.animation.get(e).setpack(Action.STAND)
+        }
+        override fun entityRemoved(e: Entity) {}
+      }
+    )
+    e.addEntityListener(
+      Family.all(AnimationC::class.java, Walk::class.java).exclude(Attack::class.java).get(),
+      object: EntityListener {
+        override fun entityAdded(e: Entity) {
+          Mappers.animation.get(e).setpack(Action.WALK)
+        }
+        override fun entityRemoved(e: Entity) {}
+      }
+    )
+
+    e.addEntityListener(
+      Family.all(Face::class.java,Walk::class.java).exclude(Attack::class.java).get(),
+      object: EntityListener {
+        override fun entityAdded(e: Entity) {
+          Mappers.face.get(e).vector = Mappers.walk.get(e).vector
+        }
+        override fun entityRemoved(e: Entity) {}
+      }
+    )
   }
 
   override fun updateInterval() {
@@ -40,12 +64,11 @@ class AnimationSystem (
       val c = Mappers.creature.get(e)
       val a = ru.ltow.bb.component.Animation(packs[c.name])
       val f = Face()
-      val b = Billboard(c.position,a.frame(Face.SE,0f))
+      val b = Billboard(c.position,a.frame())
       e.add(a).add(f).add(b)
     }
     animations.forEach { e ->
-      val a = Mappers.animation.get(e)
-      Mappers.billboard.get(e).decal.textureRegion = a.frame(face(e),interval)
+      Mappers.billboard.get(e).decal.textureRegion = Mappers.animation.get(e).frame(interval)
     }
   }
 
@@ -56,13 +79,13 @@ class AnimationSystem (
     return regions
   }
 
-  private fun creatures(c: Array<Creature>): ArrayMap<String,ArrayMap<Action,ArrayMap<Face,Animation<TextureRegion>>>> {
-    val newpack = ArrayMap<String,ArrayMap<Action,ArrayMap<Face,Animation<TextureRegion>>>>()
+  private fun creatures(c: Array<Creature>): ArrayMap<String,ArrayMap<Action,ArrayMap<FaceSystem.Face,Animation<TextureRegion>>>> {
+    val newpack = ArrayMap<String,ArrayMap<Action,ArrayMap<FaceSystem.Face,Animation<TextureRegion>>>>()
     c.forEach { creature ->
       if(newpack.put(creature.name,ArrayMap()) != 0) throw IllegalArgumentException("duplicate name: {$creature.name}")
       Action.values().forEach { action ->
         newpack[creature.name].put(action,ArrayMap())
-        Face.values().forEach { face ->
+        FaceSystem.Face.values().forEach { face ->
           newpack[creature.name][action].put(
             face,
             Animation(
@@ -75,18 +98,5 @@ class AnimationSystem (
       }
     }
     return newpack
-  }
-
-  private fun face(e: Entity): Face {
-    val dv = Mappers.billboard.get(e).decal.position.cpy().sub(camera.position)
-    val fv = Mappers.face.get(e).vector.cpy()
-
-    val dot = dv.cpy().dot(fv)
-    val crs = dv.cpy().crs(fv).y
-
-    return if(dot >= 0 && crs >= 0) Face.NW
-    else if(dot >= 0 && crs < 0) Face.NE
-    else if(dot < 0 && crs >= 0) Face.SW
-    else Face.SE
   }
 }
