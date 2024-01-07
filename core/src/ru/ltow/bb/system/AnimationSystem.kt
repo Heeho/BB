@@ -47,16 +47,6 @@ class AnimationSystem (
         override fun entityRemoved(e: Entity) {}
       }
     )
-
-    e.addEntityListener(
-      Family.all(Face::class.java,Walk::class.java).exclude(Attack::class.java).get(),
-      object: EntityListener {
-        override fun entityAdded(e: Entity) {
-          Mappers.face.get(e).vector = Mappers.walk.get(e).vector
-        }
-        override fun entityRemoved(e: Entity) {}
-      }
-    )
   }
 
   override fun updateInterval() {
