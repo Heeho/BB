@@ -16,45 +16,35 @@ class PlayerSystem(
   val c: Camera,
   i: Float
 ): IntervalSystem(i), InputProcessor {
-  lateinit var standers: ImmutableArray<Entity>
-  lateinit var walkers: ImmutableArray<Entity>
-
-  val DRAG_SENSIVITY = 10f
+  lateinit var standing: ImmutableArray<Entity>
+  lateinit var walking: ImmutableArray<Entity>
 
   var dragged = false
-  val dragv = Vector3()
+  val walk = Walk(Vector3())
 
   override fun addedToEngine(e: Engine) {
-    standers = e.getEntitiesFor(Family.all(Player::class.java, Stand::class.java).get())
-    walkers = e.getEntitiesFor(Family.all(Player::class.java, Walk::class.java).get())
+    standing = e.getEntitiesFor(Family.all(Player::class.java, Stand::class.java).get())
+    walking = e.getEntitiesFor(Family.all(Player::class.java, Walk::class.java).get())
   }
 
   override fun updateInterval() {
-    standers.forEach { e ->
-      if(dragv.len() > DRAG_SENSIVITY)
-        e.add(Walk(dragv))
-    }
-    walkers.forEach { e ->
-      if(!dragged)
-        e.add(Stand())
-    }
   }
 
   override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
     return if(button == Input.Buttons.RIGHT) {
-      dragged = true
+      standing.forEach { it.add(walk) }
       true
     } else false
   }
   override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
     return if(button == Input.Buttons.RIGHT) {
-      dragged = false
+      walking.forEach { it.remove(Walk::class.java) }
       true
     } else false
   }
   override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
     return if(dragged) {
-      dragv.set(Gdx.input.deltaX.toFloat(),0f,Gdx.input.deltaY.toFloat())
+      walk.vector.set(Gdx.input.deltaX.toFloat(),0f,Gdx.input.deltaY.toFloat())
       true
     } else false
   }

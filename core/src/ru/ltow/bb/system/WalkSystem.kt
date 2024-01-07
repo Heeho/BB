@@ -34,15 +34,6 @@ class WalkSystem(i: Float): IntervalSystem(i) {
                 }
             }
         )
-        e.addEntityListener(
-            Family.all(Stand::class.java).get(),
-            object: EntityListener {
-                override fun entityAdded(e: Entity) {
-                    e.remove(Walk::class.java)
-                }
-                override fun entityRemoved(e: Entity) {}
-            }
-        )
     }
 
     override fun updateInterval() {
