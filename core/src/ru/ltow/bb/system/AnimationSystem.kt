@@ -30,7 +30,7 @@ class AnimationSystem (
     packs = creatures(creaturedata)
 
     e.addEntityListener(
-      Family.all(AnimationC::class.java, Stand::class.java).exclude(Use::class.java, Attack::class.java).get(),
+      Family.all(AnimationC::class.java).exclude(Walk::class.java,Use::class.java,Attack::class.java).get(),
       object: EntityListener {
         override fun entityAdded(e: Entity) {
           Mappers.animation.get(e).setpack(Action.STAND)

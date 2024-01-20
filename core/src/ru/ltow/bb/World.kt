@@ -2,7 +2,6 @@ package ru.ltow.bb
 
 import com.badlogic.ashley.core.Engine
 import com.badlogic.gdx.Gdx
-import com.badlogic.gdx.InputMultiplexer
 import com.badlogic.gdx.graphics.*
 import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g3d.*
@@ -15,6 +14,8 @@ import com.badlogic.gdx.utils.Disposable
 import com.badlogic.gdx.utils.viewport.FitViewport
 import ru.ltow.bb.component.Creature
 import com.badlogic.gdx.utils.Array
+import ru.ltow.bb.component.Mappers
+import ru.ltow.bb.component.Walk
 import ru.ltow.bb.system.*
 
 class World(
@@ -39,59 +40,84 @@ class World(
     val engine: Engine
 
     init {
-        //RENDERER
+        //CAMERA
+        val viewportSize = 10f
+        camera = Camera(
+            viewportSize, 66f, 1f, 10000f
+        )
+        viewport = FitViewport(viewportSize, viewportSize, camera)
 
-          //CAMERA
-          val viewportSize = 10f
-          camera = Camera(
-              viewportSize, 66f, 1f, 10000f,
-              Vector3(0f, 5f, 10f),
-              Vector3(0f, 0f, 0f),
-              prefs.getFloat("CAMERA_ROTATE_SENSIVITY", 1f)
-          )
-          viewport = FitViewport(viewportSize, viewportSize, camera)
-
-          //ENVIRONMENT
-          val directionalLight = DirectionalLight()
-          environment.set(ColorAttribute(ColorAttribute.AmbientLight,ambientLightColor))
-          directionalLight.color.set(directionalLightColor)
-          directionalLight.direction.set(camera.direction)
-          environment.add(directionalLight)
-
-          //TEXTURES
-          atlas = TextureAtlas(Gdx.files.internal("atlas/animation.atlas"))
-
+        //TEXTURES
+        atlas = TextureAtlas(Gdx.files.internal("atlas/animation.atlas"))
 
         //FACTORIES
 
-            //ENTITYFACTORY
-            entityFactory = EntityFactory()
+        //ENTITYFACTORY
+        entityFactory = EntityFactory()
 
         //ENGINE
         engine = Engine()
 
-            //SYSTEMS
-                val ITERATING_SYSTEM_INTERVAL = 0.05f
+        //SYSTEMS
+            val ANIMATION_SYSTEM_INTERVAL = 0.05f
+            val WALK_SYSTEM_INTERVAL = 0.015f
+            val GRAVITY_SYSTEM_INTERVAL = 0.05f
+            val PLAYER_SYSTEM_INTERVAL = 1f
 
-                //ANIMATION
-                engine.addSystem(AnimationSystem(atlas,creatures,ITERATING_SYSTEM_INTERVAL))
-                engine.addSystem(FaceSystem(camera,ITERATING_SYSTEM_INTERVAL))
+            //PLAYER
+            val player = PlayerSystem(PLAYER_SYSTEM_INTERVAL)
+            engine.addSystem(player)
 
-                //ACTIONS
-                engine.addSystem(WalkSystem(ITERATING_SYSTEM_INTERVAL))
+            //ACTIONS
+            engine.addSystem(WalkSystem(WALK_SYSTEM_INTERVAL))
 
-                //RENDERER
-                groupStrategy = CameraGroupStrategy(camera)
-                decalBatch = DecalBatch(groupStrategy)
-                modelBatch = ModelBatch()
-                engine.addSystem(Renderer(camera,viewport,modelBatch,decalBatch,background,environment))
+            //GRAVITY
+            engine.addSystem(GravitySystem(GRAVITY_SYSTEM_INTERVAL))
 
-                //PLAYER
-                val player = PlayerSystem(camera,ITERATING_SYSTEM_INTERVAL)
-                engine.addSystem(player)
+            //ANIMATION
+            engine.addSystem(AnimationSystem(atlas,creatures,ANIMATION_SYSTEM_INTERVAL))
 
-            //CONTROLLER
-            Gdx.input.inputProcessor = InputMultiplexer(camera,player)
+            //FACE
+            engine.addSystem(FaceSystem(camera,ANIMATION_SYSTEM_INTERVAL))
+
+        //VIEW
+            //ENVIRONMENT
+            val directionalLight = DirectionalLight()
+            environment.set(ColorAttribute(ColorAttribute.AmbientLight,ambientLightColor))
+            directionalLight.color.set(directionalLightColor)
+            directionalLight.direction.set(camera.direction)
+            environment.add(directionalLight)
+
+            //RENDERER
+            groupStrategy = CameraGroupStrategy(camera)
+            decalBatch = DecalBatch(groupStrategy)
+            modelBatch = ModelBatch()
+            engine.addSystem(Renderer(
+                camera,
+                viewport,
+                modelBatch,
+                decalBatch,
+                background,
+                environment
+            ))
+
+        //CONTROLLER
+        Gdx.input.inputProcessor = PlayerController(
+            onTouchDownLEFTorP0 = {},
+            onTouchDownRIGHTorP1 = {
+                player.standing.forEach { it.add(Walk()) }
+            },
+            onTouchUpLEFTorP0 = {},
+            onTouchUpRIGHTorP1 = {
+                player.walking.forEach { it.remove(Walk::class.java) }
+            },
+            onTouchDraggedP0 = {
+                //camera.rotateAroundLookAtX()
+                //camera.rotateAroundLookAtY()
+                player.walking.forEach { Mappers.walk.get(it).vector.set(Gdx.input.deltaX.toFloat(),0f,Gdx.input.deltaY.toFloat()).nor() }
+            },
+            onTouchDraggedP1 = {}
+        )
 
         //TEST
         engine.addEntity(entityFactory.cube(Vector3(1f,0f,0f)))
