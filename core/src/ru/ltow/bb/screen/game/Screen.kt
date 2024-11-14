@@ -1,26 +1,30 @@
 package ru.ltow.bb.screen.game
 
-import ru.ltow.bb.screen.BaseScreen
+import com.badlogic.gdx.ScreenAdapter
 import ru.ltow.bb.Core
 import ru.ltow.bb.World
 
 class Screen(
-    core: Core,
-    ui: UI = UI(core.skin)
-): BaseScreen(core,ui) {
+    val core: Core
+): ScreenAdapter() {
+    private val ui: UI = UI()
     private val world = World()
 
     override fun render(delta: Float) {
         world.engine.update(delta)
-        super.render(delta)
+        ui.viewport.apply()
+        ui.act(delta)
+        ui.draw()
     }
+
     override fun resize(width: Int, height: Int) {
         world.viewport.update(width,height)
-        super.resize(width, height)
+        ui.viewport.update(width,height,true)
+        ui.viewport.apply()
     }
 
     override fun dispose() {
         world.dispose()
-        super.dispose()
+        ui.dispose()
     }
 }

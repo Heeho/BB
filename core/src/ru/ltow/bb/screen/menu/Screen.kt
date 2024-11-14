@@ -2,25 +2,37 @@ package ru.ltow.bb.screen.menu
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputAdapter
-import ru.ltow.bb.screen.BaseScreen
+import com.badlogic.gdx.ScreenAdapter
 import ru.ltow.bb.Core
 import ru.ltow.bb.screen.game.Screen
 
 class Screen(
-    core: Core,
-    ui: UI = UI(core.skin)
-): BaseScreen(core,ui) {
+    val core: Core
+): ScreenAdapter() {
+    private val ui: UI = UI(core.skin)
+
     init {
         Gdx.input.inputProcessor = object: InputAdapter() {
             override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
                 core.setScreen(Screen(core))
                 dispose()
-                return super.touchDown(screenX, screenY, pointer, button)
+                return true
             }
         }
     }
 
     override fun render(delta: Float) {
-        super.render(delta)
+        ui.viewport.apply()
+        ui.act(delta)
+        ui.draw()
+    }
+
+    override fun resize(width: Int, height: Int) {
+        ui.viewport.update(width,height,true)
+        ui.viewport.apply()
+    }
+
+    override fun dispose() {
+        ui.dispose()
     }
 }

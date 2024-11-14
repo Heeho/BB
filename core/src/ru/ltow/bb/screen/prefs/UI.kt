@@ -1,18 +1,15 @@
 package ru.ltow.bb.screen.prefs
 
-import ru.ltow.bb.screen.BaseUI
-import ru.ltow.bb.screen.Skin
+import com.badlogic.gdx.scenes.scene2d.Stage
+import com.badlogic.gdx.scenes.scene2d.ui.Table
+import com.badlogic.gdx.utils.viewport.ScreenViewport
 
-class UI(
-    skin: Skin
-): BaseUI() {
+class UI: Stage(ScreenViewport()) {
+    val table = Table()
+
     init {
-        //addActor(CheckBox("1", checkBoxStyle))
-        //val table = Table()
-        //table.setFillParent(true)
-        //table.add(CheckBox("1", checkBoxStyle))
-        //table.add(CheckBox("2", checkBoxStyle))
-        //table.add(CheckBox("3", checkBoxStyle))
-        //addActor(table)
+        table.setFillParent(true)
+        table.setDebug(true)
+        this.addActor(table)
     }
 }
