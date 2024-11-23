@@ -12,14 +12,9 @@ import javax.net.ssl.SSLSocket
 import javax.net.ssl.X509TrustManager
 import kotlin.concurrent.thread
 
-fun main(
-    args: Array<String> = arrayOf(
-        "C:\\dst\\bb.jks",
-        "123abc"
-    )
-) {
-    val kystorepath = args[0]
-    val keystorepassword = args[1].toCharArray()
+fun main() {
+    val kystorepath = "C:\\dst\\bb.jks"
+    val keystorepassword = "123abc".toCharArray()
 
     val protocol = "TLS"
     val algorithm = "SunX509"
