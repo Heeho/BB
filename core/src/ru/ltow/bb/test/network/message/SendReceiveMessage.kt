@@ -11,13 +11,13 @@ fun main() {
     val server = ServerSocketFactory.getDefault().createServerSocket(9999)
     var listening = true
 
-    val message = "hello!"
+    val message = "Hello!"
 
     val t = thread {
         while(listening) {
-            println("started listening...")
+            println("Started listening...")
             val i = DataInputStream(server.accept().inputStream)
-            println("socket accepted")
+            println("Socket accepted")
             while(listening) {
                 try {
                     val type = i.readByte().toInt()
@@ -25,7 +25,7 @@ fun main() {
                         Packet.Type.MESSAGE.id -> {
                             val receivedmessage = i.readUTF()
                             assert( message == receivedmessage )
-                            println("message received: $receivedmessage")
+                            println("Message received: $receivedmessage")
                         }
                     }
                 } catch(e: EOFException) {
@@ -43,7 +43,7 @@ fun main() {
         sleep(1111) //Не влияет: на сервере println(i.readUTF()) ждет данные. Синхронизация не нужна.
         o.writeUTF(message)
         o.writeUTF("2nd string shouldn't be printed")
-        println("message sent")
+        println("Message sent")
     }
 
     sleep(1111)
